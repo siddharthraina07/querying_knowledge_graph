@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Knowledge Graph</title>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+   <style>
+        body {
+            
+            background-color: #f8f9fa;
+        }
+        /* .container {                        
+            max-width: 1000px;
+        } */
+        .checkbox-list {
+            height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+        .graph-container {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+        }
+        .form-section {
+            margin-bottom: 30px;
+        }
+        .hidden {
+            display: none;
+        }
+        .column {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+        }
+        
+        .bg_nw{
+            background: #90c3f7;
+        }
+
+        #graph-qa-form{
+            min-height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <header class="">
+        <!-- <h3 class="text-center pb-2">Case Knowledge Graph</h3> -->
+         <img class="img-fluid" src="" alt="" class="w-100">
+    </header>
+    <div class="container-fluid">
+      
+        <div class="row">
+            <div class="col-md-8 left-column">
+
+                <div class="card shadow-sm text-center mb-2">
+                <div class="">
+                    <div class="card-body">
+                    <h4>Overall Graph</h4>
+                    <button class="btn btn-primary mb-2" onclick="fetchOverallGraph()"> <i class="bi bi-diagram-3-fill"></i> Fetch Overall Graph</button>
+                </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm  mb-2">
+                <div class="card-body">
+                    <div class="form-section mb-0">
+                        <div class="row">
+
+                            <div class="col-6">
+                                <h5>Entity Types</h5>
+                            </div>
+
+                            <div class="col-6 text-end">
+                                <div class=" mb-2">
+                                    <button class="btn btn-secondary" style="    background: cadetblue;
+                border-color: cadetblue;" onclick="toggleVisibility('search-attributes-form1')"> <i class="bi bi-border-style"></i> Search Graph by Node Name 
+                                        </button>
+                                    </div>
+                            </div>
+                        </div>
+                        
+
+                        <div id="search-attributes-form1" class="hidden">
+                        <div class="card shadow-sm mb-3" >
+                    
+                            <div class="card-body" class="hidden">
+                    <div class="form-section">
+                        <h5>Search Graph by Node Name</h5>
+                        <form id="search-text-form">
+                            <div class="form-group">
+                                <label for="search-text">Enter text to search:</label>
+                                <!-- <input type="text" class="form-control"  name="text"> -->
+        
+                                <textarea name="" id="search-text" class="form-control"></textarea>
+        
+                            </div>
+                            <div class="py-2 text-center">
+                            <button type="button" class="btn btn-primary" onclick="searchGraphByText()"> <i class="bi bi-search"></i> Search</button>
+                        </div>
+                        </form>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+                        <form id="search-attributes-form" class="">
+                            <div class="row">
+                                <div class="col-md-6 mb-2">
+                                    <div class="form-group mb-2">
+                                        <label class="h6">Case Numbers</label>
+                                        <div class="checkbox-list">
+                                            {% for case_no in case_nos %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="case_nos"
+                                                    value="{{ case_no }}">
+                                                <label class="form-check-label">{{ case_no }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="h6">Provisions</label>
+                                        <div class="checkbox-list">
+                                            {% for provision in provisions %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="provisions"
+                                                    value="{{ provision }}">
+                                                <label class="form-check-label">{{ provision }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-2">
+                                        <label class="h6">Subject Matters</label>
+                                        <div class="checkbox-list">
+                                            {% for subject_matter in subject_matters %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="subject_matters"
+                                                    value="{{ subject_matter }}">
+                                                <label class="form-check-label">{{ subject_matter }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="h6">Judges</label>
+                                        <div class="checkbox-list">
+                                            {% for judge in judges %}
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" name="judges" value="{{ judge }}">
+                                                <label class="form-check-label">{{ judge }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="py-2 mt-2 text-center">
+                            <button type="button" class="btn btn-primary" onclick="searchGraph()"> <i class="bi bi-search"></i>  Search Graph</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+               
+            </div>
+            <div class="col-md-4 right-column">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                <div class="form-section">
+                    <h4>Ask your Graph</h4>
+                    <form id="graph-qa-form">
+                        <div class="form-group">
+                            <label for="graph-qa-query">Enter your query:</label>
+                            <!-- <input type="text" class="form-control"  name="query"> -->
+
+                            <textarea name="" class="form-control" name="query" id="graph-qa-query"></textarea>
+                        </div>
+                        <div class="text-center mt-3">
+                        <button type="button" class="btn btn-primary" onclick="graphQA()"> <i class="bi bi-send"></i> Submit Query</button>
+                    </div>
+                    </form>
+                </div>
+
+
+            
+
+                <div class="card shadow-sm mb-3">
+                    <div class="card-body">
+                <div class="">
+                    <div class="text-center">
+                    <button class="btn btn-info text-white"
+                    onclick="toggleVisibility('add-node-form1')"
+                     >Node & Relationship Form</button> </div>
+                     
+                     <form id="add-node-form1" class="hidden">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="node1-type">Node 1 Type</label>
+                                    <input type="text" class="form-control" id="node1-type" name="node1_type">
+                                </div>
+                                <div class="form-group">
+                                    <label for="node1-name">Node 1 Name</label>
+                                    <input type="text" class="form-control" id="node1-name" name="node1_name">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="relation-name">Relationship Name</label>
+                                    <input type="text" class="form-control" id="relation-name" name="relation_name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="node2-type">Node 2 Type</label>
+                                    <input type="text" class="form-control" id="node2-type" name="node2_type">
+                                </div>
+                                <div class="form-group">
+                                    <label for="node2-name">Node 2 Name</label>
+                                    <input type="text" class="form-control" id="node2-name" name="node2_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="py-3 text-center">
+                        <button type="button" class="btn btn-sm btn-primary" onclick="addNode()"> <i class="bi bi-plus-circle-fill"></i>  Add </button>
+                    </div>
+                    </form> 
+                </div>
+                </div>
+                </div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="text-center">
+                    <button class="btn btn-danger" onclick="toggleVisibility('delete-node-form')">Toggle Delete Node Form</button>
+                </div>
+                    <form id="delete-node-form" class="hidden">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="delete-node-type">Node Type</label>
+                                    <input type="text" class="form-control" id="delete-node-type" name="node_type">
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="delete-node-name">Node Name</label>
+                                    <input type="text" class="form-control" id="delete-node-name" name="node_name">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="py-3 text-center">
+                        <button type="button" class="btn btn-sm btn-danger" onclick="deleteNode()">  <i class="bi bi-trash3"></i>  Delete</button>
+                    </div>
+                    </form>
+                </div>
+                </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+        <!-- Single container for all graph results -->
+        <div id="graph-results" class="graph-container"></div>
+    </div>
+
+
+    <!-- <button class="btn btn-primary" type="button"  aria-controls="offcanvasRight">Toggle right offcanvas</button> -->
+
+<!-- <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Toggle node relationship form</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form id="add-node-form" >
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="node1-type">Node 1 Type</label>
+                    <input type="text" class="form-control mb-2" id="node1-type" name="node1_type">
+                </div>
+                <div class="form-group">
+                    <label for="node1-name">Node 1 Name</label>
+                    <input type="text" class="form-control mb-2" id="node1-name" name="node1_name">
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="relation-name">Relationship Name</label>
+                    <input type="text" class="form-control mb-2" id="relation-name" name="relation_name">
+                </div>
+                <div class="form-group">
+                    <label for="node2-type">Node 2 Type</label>
+                    <input type="text" class="form-control mb-2" id="node2-type" name="node2_type">
+                </div>
+                <div class="form-group">
+                    <label for="node2-name">Node 2 Name</label>
+                    <input type="text" class="form-control mb-2" id="node2-name" name="node2_name">
+                </div>
+            </div>
+        </div>
+        <div class="py-3 text-center">
+            <button type="button" class="btn btn-sm btn-primary" onclick="addNode()" data-bs-dismiss="modal"> <i class="bi bi-plus-circle-fill"></i>  Add</button>
+        </div>
+    </form>
+
+  </div>
+</div> -->
+
+
+    <script>
+        function fetchOverallGraph() {
+            $.get('/overall_graph', function(data) {
+                $('#graph-results').html(data);
+            });
+        }
+
+        function searchGraph() {
+            $.post('/search_graph', $('#search-attributes-form').serialize(), function(data) {
+                $('#graph-results').html(data);
+            });
+        }
+
+        function searchGraphByText() {
+            $.post('/search_text', $('#search-text-form').serialize(), function(data) {
+                $('#graph-results').html(data);
+            });
+        }
+
+        function addNode() {
+            $.post('/add_node', $('#add-node-form').serialize(), function(response) {
+                alert(response.status);
+            });
+        }
+
+        function deleteNode() {
+            $.post('/delete_node', $('#delete-node-form').serialize(), function(response) {
+                alert(response.status);
+            });
+        }
+
+        function graphQA() {
+            $.post('/graph_qa', $('#graph-qa-form').serialize(), function(response) {
+                $('#graph-results').html('<p>' + response.response + '</p>');
+            });
+        }
+
+        function toggleVisibility(formId) {
+            var form = document.getElementById(formId);
+            if (form.classList.contains('hidden')) {
+                form.classList.remove('hidden');
+            } else {
+                form.classList.add('hidden');
+            }
+        }
+    </script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script>
+    var offcanvasElementList = [].slice.call(document.querySelectorAll('.offcanvas'))
+var offcanvasList = offcanvasElementList.map(function (offcanvasEl) {
+  return new bootstrap.Offcanvas(offcanvasEl)
+})
+</script>
+</body>
+</html>
